@@ -1,4 +1,4 @@
-package org.example;
+package md.dunai;
 
 public class App 
 {
