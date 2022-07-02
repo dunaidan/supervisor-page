@@ -1,9 +1,32 @@
 package md.dunai;
 
-public class App 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+
+public class App
 {
     public static void main( String[] args )
     {
-        System.out.println( "Supervisor page" );
+        try {
+            Gson gson = new Gson();
+            Reader reader = Files.newBufferedReader(Paths.get("employee.json"));
+            List<Employee> employeeList = new Gson().fromJson(reader, new TypeToken<List<Employee>>() {}.getType());
+            for(Employee em : employeeList) {
+                System.out.println(em.getFirstName() + " " + em.getLastName());
+            }
+
+            reader.close();
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        } catch (NullPointerException e) {
+            System.out.println("The file is empty");
+        }
     }
 }
