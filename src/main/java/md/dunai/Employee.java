@@ -1,7 +1,11 @@
 package md.dunai;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Employee {
+    @SerializedName(value = "first_name")
     private final String firstName;
+    @SerializedName(value = "last_name")
     private final String lastName;
     private int age;
     private String email;
@@ -33,5 +37,16 @@ public class Employee {
 
     public String getAddress() {
         return address;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                '}';
     }
 }
