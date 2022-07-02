@@ -15,6 +15,7 @@ public class Match {
     private int awayGoals;
     private Date date;
     private String analyst;
+
     private Status status;
 
     public Match(String homeTeam, String awayTeam, int homeGoals, int awayGoals, Date date, String analyst, Status status) {
@@ -33,6 +34,26 @@ public class Match {
 
     public String getAwayTeam() {
         return awayTeam;
+    }
+
+    public String getAnalyst() {
+        return analyst;
+    }
+
+    public int getHomeGoals() {
+        return homeGoals;
+    }
+
+    public int getAwayGoals() {
+        return awayGoals;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public Status getStatus() {
+        return status;
     }
 
     @Override
