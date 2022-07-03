@@ -25,14 +25,5 @@
     "date": "15.06.2022",
     "analyst": "Dan Dunai",
     "status": "Closed"
-  },
-  {
-    "home_team": "Zimbru",
-    "away_team": "Steaua",
-    "home_goals": 3,
-    "away_goals": 3,
-    "date": "15.06.2022",
-    "analyst": "Jora Jora",
-    "status": "Closed"
   }
 ]
