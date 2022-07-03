@@ -25,5 +25,14 @@
     "date": "15.06.2022",
     "analyst": "Dan Dunai",
     "status": "Closed"
+  },
+  {
+    "home_team": "FC Barcelona",
+    "away_team": "Real Madrid",
+    "home_goals": 5,
+    "away_goals": 0,
+    "date": "15.06.2016",
+    "analyst": "Vasile Chitoroga",
+    "status": "Closed"
   }
 ]
