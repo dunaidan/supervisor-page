@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DBConnection implements Runnable {
     private Connection conn;
-    private String url;
+    private final String url;
 
     public DBConnection(String url) {
         try {

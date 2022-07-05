@@ -88,7 +88,7 @@ public class App
         DB.close();
     }
 
-    public static int getNumMatches(int employeeID, Status status) throws SQLException, InterruptedException {
+    public static int getNumMatches(int employeeID, Status status) throws SQLException {
         String query = "SELECT count(id_match) FROM Match WHERE analyst = " + employeeID + " AND Status = '" + status.toString() +"'";
         ResultSet resultSet = DB.select(query);
         return resultSet.getInt(1);

@@ -3,8 +3,8 @@ package md.dunai;
 import java.sql.*;
 
 public class DBManger {
-    private DBConnection conn;
-    private Statement statement;
+    private final DBConnection conn;
+    private final Statement statement;
 
     public DBManger(String url) {
         try {
