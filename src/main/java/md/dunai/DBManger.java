@@ -26,7 +26,6 @@ public class DBManger {
     public ResultSet select (String query) {
         ResultSet resultSet = null;
         try {
-            Statement statement = conn.createStatement();
             resultSet = statement.executeQuery(query);
         } catch (SQLException e) {
             System.out.println(e.getMessage());

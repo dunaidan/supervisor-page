@@ -13,10 +13,10 @@ import java.util.*;
 
 public class App
 {
-    public static List<Employee> employeeList = new ArrayList<>();
-    public static List<Match> matchList = new ArrayList<>();
+    private static List<Employee> employeeList = new ArrayList<>();
+    private static List<Match> matchList = new ArrayList<>();
 
-    private static final DBManger dbManager = new DBManger("jdbc:sqlite:supervisor.db");
+    private static final DBManger DB = new DBManger("jdbc:sqlite:supervisor.db");
 
     public static void main( String[] args ) throws SQLException {
         try {
@@ -38,20 +38,21 @@ public class App
         }
 
         for(Employee em : employeeList) {
-            String query = "INSERT INTO Employee (firstName, secondName, age, email, address) VALUES ('" + em.getFirstName() + "', '" + em.getLastName() + "', " + em.getAge() + ", '" + em.getEmail() + "', '" + em.getAddress() + "')";
-            dbManager.insert(query);
+            String query = "INSERT INTO Employee (firstName, secondName, age, email, address) " +
+                    "VALUES ('" + em.getFirstName() + "', '" + em.getLastName() + "', " + em.getAge() + ", '" + em.getEmail() + "', '" + em.getAddress() + "')";
+            DB.insert(query);
         }
 
         for(Match match : matchList) {
                 String[] names = match.getAnalyst().split(" ");
                 String query = "SELECT * FROM Employee WHERE firstName = '"+ names[0] +"' AND secondName = '"+ names[1] +"'";
-                ResultSet resultSet = dbManager.select(query);
+                ResultSet resultSet = DB.select(query);
                 if (resultSet != null && resultSet.next()) {
                     int idEmployee = resultSet.getInt("id_employee");
                     query = "INSERT INTO Match (homeTeam, awayTeam, homeGoals, awayGoals, date, analyst, status) " +
                             "VALUES ('"+ match.getHomeTeam() + "', '"+ match.getAwayTeam() + "', '"+ match.getHomeGoals() + "', '"+ match.getAwayGoals() + "'," +
                             " '"+ match.getDate() + "', " + idEmployee + " , '" + match.getStatus() + "')";
-                    dbManager.insert(query);
+                    DB.insert(query);
 
                 } else {
                     System.out.println(names[0] + " employee is missing in the database");
@@ -61,7 +62,7 @@ public class App
         //get all employees from database
         Map<Integer, String> employees = new HashMap<>();
         String query = "SELECT id_employee, firstName, secondName FROM Employee";
-        ResultSet resultSet = dbManager.select(query);
+        ResultSet resultSet = DB.select(query);
         while(resultSet != null && resultSet.next()) {
             String name = resultSet.getString(2) + " " + resultSet.getString(3);
             employees.put(resultSet.getInt(1), name);
@@ -84,13 +85,12 @@ public class App
         fileWriter.writeToFile(path, header, dataToExport);
 
         //close database connections
-        dbManager.close();
+        DB.close();
     }
 
     public static int getNumMatches(int employeeID, Status status) throws SQLException {
         String query = "SELECT count(id_match) FROM Match WHERE analyst = " + employeeID + " AND Status = '" + status.toString() +"'";
-        ResultSet resultSet = dbManager.select(query);
+        ResultSet resultSet = DB.select(query);
         return resultSet.getInt(1);
-
     }
 }
