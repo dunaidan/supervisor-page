@@ -18,7 +18,7 @@ public class App
 
     private static final DBManger DB = new DBManger("jdbc:sqlite:supervisor.db");
 
-    public static void main( String[] args ) throws SQLException {
+    public static void main( String[] args ) throws SQLException, InterruptedException {
         try {
             Gson gson = new GsonBuilder()
                     .setDateFormat("dd.MM.yyyy")
@@ -88,7 +88,7 @@ public class App
         DB.close();
     }
 
-    public static int getNumMatches(int employeeID, Status status) throws SQLException {
+    public static int getNumMatches(int employeeID, Status status) throws SQLException, InterruptedException {
         String query = "SELECT count(id_match) FROM Match WHERE analyst = " + employeeID + " AND Status = '" + status.toString() +"'";
         ResultSet resultSet = DB.select(query);
         return resultSet.getInt(1);

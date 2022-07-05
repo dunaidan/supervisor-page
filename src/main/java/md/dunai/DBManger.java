@@ -3,19 +3,21 @@ package md.dunai;
 import java.sql.*;
 
 public class DBManger {
-    private Connection conn;
+    private DBConnection conn;
     private Statement statement;
 
     public DBManger(String url) {
         try {
-            this.conn = DriverManager.getConnection(url);
-            this.statement = conn.createStatement();
+            this.conn = new DBConnection(url);
+            this.statement = conn.getConn().createStatement();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void insert (String query) {
+        Thread connThread = new Thread(this.conn);
+        connThread.start();
         try {
             statement.execute(query);
         } catch (SQLException e) {
@@ -24,6 +26,8 @@ public class DBManger {
     }
 
     public ResultSet select (String query) {
+        Thread connThread = new Thread(this.conn);
+        connThread.start();
         ResultSet resultSet = null;
         try {
             resultSet = statement.executeQuery(query);
@@ -35,7 +39,7 @@ public class DBManger {
 
     public void close() throws SQLException {
         this.statement.close();
-        this.conn.close();
+        this.conn.getConn().close();
     }
 
 }
