@@ -1,23 +1,33 @@
 package md.dunai;
 
-import java.sql.*;
+import md.dunai.db.DBConn;
+import md.dunai.db.DBConnectionChecker;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DBManger {
-    private final DBConnection conn;
+    private final DBConn conn;
     private final Statement statement;
 
-    public DBManger(String url) {
+    public DBManger(DBConn dbConn) {
         try {
-            this.conn = new DBConnection(url);
+            this.conn = dbConn;
+
+            //opens a Thread that check if the connection to database is not closed
+            DBConnectionChecker checker = new DBConnectionChecker(dbConn);
+            Thread connThread = new Thread(checker);
+            connThread.start();
+
             this.statement = conn.getConn().createStatement();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void insert (String query) {
-        Thread connThread = new Thread(this.conn);
-        connThread.start();
         try {
             statement.execute(query);
         } catch (SQLException e) {
@@ -26,8 +36,7 @@ public class DBManger {
     }
 
     public ResultSet select (String query) {
-        Thread connThread = new Thread(this.conn);
-        connThread.start();
+
         ResultSet resultSet = null;
         try {
             resultSet = statement.executeQuery(query);

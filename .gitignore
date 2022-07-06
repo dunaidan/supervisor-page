@@ -3,6 +3,7 @@ matches.json
 results.csv
 supervisor.db
 supervisor.sqbpro
+supervisor.db-journal
 
 
 target/
