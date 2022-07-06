@@ -1,50 +1,33 @@
 package md.dunai;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import md.dunai.db.DBConn;
+import md.dunai.files.JsonReader;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class App
 {
-    private static List<Employee> employeeList = new ArrayList<>();
-    private static List<Match> matchList = new ArrayList<>();
     private static DBManger db;
-
-
-
+    
     public static void main( String[] args ) throws SQLException {
 
         DBConn dbConn = new DBConn("jdbc:sqlite:supervisor.db");
         db = new DBManger(dbConn);
 
-        try {
-            Gson gson = new GsonBuilder()
-                    .setDateFormat("dd.MM.yyyy")
-                    .create();
+        Type type = new TypeToken<List<Employee>>() {}.getType();
+        JsonReader<Employee> employeesReader = new JsonReader<>("json/employee.json", type);
+        List<Employee> employeeList = employeesReader.getData();
 
-            Reader reader = Files.newBufferedReader(Paths.get("employee.json"));
-            employeeList = gson.fromJson(reader, new TypeToken<List<Employee>>() {}.getType());
-            reader = Files.newBufferedReader(Paths.get("matches.json"));
-            matchList = gson.fromJson(reader, new TypeToken<List<Match>>() {}.getType());
+        type = new TypeToken<List<Match>>() {}.getType();
+        JsonReader<Match> matchesReader = new JsonReader<>("json/matches.json", type);
+        List<Match> matchList = matchesReader.getData();
 
-            reader.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        } catch (NullPointerException e) {
-            System.out.println("The file is empty");
-        }
 
         for(Employee em : employeeList) {
             String query = "INSERT INTO Employee (firstName, secondName, age, email, address) " +
