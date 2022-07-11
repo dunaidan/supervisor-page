@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class App
 {
@@ -30,9 +32,14 @@ public class App
 
 
         for(Employee em : employeeList) {
-            String query = "INSERT INTO Employee (firstName, secondName, age, email, address) " +
-                    "VALUES ('" + em.getFirstName() + "', '" + em.getLastName() + "', " + em.getAge() + ", '" + em.getEmail() + "', '" + em.getAddress() + "')";
-            db.insert(query);
+            boolean isEmailValid = emailValidation(em.getEmail());
+            if(isEmailValid) {
+                String query = "INSERT INTO Employee (firstName, secondName, age, email, address) " +
+                        "VALUES ('" + em.getFirstName() + "', '" + em.getLastName() + "', " + em.getAge() + ", '" + em.getEmail() + "', '" + em.getAddress() + "')";
+                db.insert(query);
+            } else {
+                System.out.println(em.getEmail() + " is not a valid email, " + em.getFirstName() + " wasn't added in the database");
+            }
         }
 
         for(Match match : matchList) {
@@ -84,5 +91,12 @@ public class App
         String query = "SELECT count(id_match) FROM Match WHERE analyst = " + employeeID + " AND Status = '" + status.toString() +"'";
         ResultSet resultSet = db.select(query);
         return resultSet.getInt(1);
+    }
+
+    public static boolean emailValidation(String email) {
+        String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }
